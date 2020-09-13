@@ -1,0 +1,7 @@
+﻿. "$PROFILEHOME\Caching\Caching.ps1"
+. "$PROFILEHOME\Docker\Docker.ps1"
+. "$PROFILEHOME\Environment\Environment.ps1"
+. "$PROFILEHOME\Kubernetes\Kubernetes.ps1"
+. "$PROFILEHOME\Location\Location.ps1"
+. "$PROFILEHOME\Prompt\Prompt.ps1"
+. "$PROFILEHOME\RuntimeInformation\RuntimeInformation.ps1"
