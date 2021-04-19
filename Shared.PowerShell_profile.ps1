@@ -3,5 +3,6 @@
 . "$PROFILEHOME\Environment\Environment.ps1"
 . "$PROFILEHOME\Kubernetes\Kubernetes.ps1"
 . "$PROFILEHOME\Location\Location.ps1"
+. "$PROFILEHOME\NuGet\NuGet.ps1"
 . "$PROFILEHOME\Prompt\Prompt.ps1"
 . "$PROFILEHOME\RuntimeInformation\RuntimeInformation.ps1"
