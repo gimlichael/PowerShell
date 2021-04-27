@@ -1,0 +1,4 @@
+﻿function Reload-Console
+{
+    . $profile
+}

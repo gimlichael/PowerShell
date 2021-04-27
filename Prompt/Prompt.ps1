@@ -23,10 +23,9 @@ function prompt {
     }
     $created = (Get-Date).ToString("s")
 
-    $Host.UI.RawUI.WindowTitle = "$pwd  <[ $os - $created"
+    $Host.UI.RawUI.WindowTitle = "$pwd  $os - $created"
     if ($hasKubectl) { $Host.UI.RawUI.WindowTitle += " - K8S: $kubernetesContext" }
     if (![string]::IsNullOrEmpty($azureSubscription)) { $Host.UI.RawUI.WindowTitle += " - Azure: $azureSubscription" }
-    $Host.UI.RawUI.WindowTitle += " ]>"
 
     return "$ "
 }

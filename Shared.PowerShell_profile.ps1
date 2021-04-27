@@ -1,4 +1,5 @@
 ﻿. "$PROFILEHOME\Caching\Caching.ps1"
+. "$PROFILEHOME\Console\Console.ps1"
 . "$PROFILEHOME\Docker\Docker.ps1"
 . "$PROFILEHOME\Environment\Environment.ps1"
 . "$PROFILEHOME\Kubernetes\Kubernetes.ps1"
