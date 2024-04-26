@@ -19,5 +19,36 @@ function Build-Docker-Image {
 
 	Invoke-Expression "docker build -t $($Tag):$($Version) -f $DockerFile ."
 	Invoke-Expression "docker tag $($Tag):$($Version) $($ContainerRegistry)$($Tag):$($Version)"
+}
+
+function Push-Docker-Image {
+    [CmdletBinding()]
+    param(
+		[Parameter(Mandatory)]
+		[string]$Tag,
+		[Parameter(Mandatory)]
+		[string]$Version,
+		[Parameter(ValueFromPipeline)]
+		[string]$ContainerRegistry="jcr.codebelt.net/geekle/"
+    )
+
+	Invoke-Expression "docker push $($ContainerRegistry)$($Tag):$($Version)"
+}
+
+function Build-And-Push-Docker-Image {
+    [CmdletBinding()]
+    param(
+		[Parameter(Mandatory)]
+		[string]$Tag,
+		[Parameter(Mandatory)]
+		[string]$Version,
+		[Parameter(ValueFromPipeline)]
+		[string]$ContainerRegistry="jcr.codebelt.net/geekle/",
+		[Parameter(ValueFromPipeline)]
+		[string]$DockerFile="Dockerfile"
+    )
+
+	Invoke-Expression "docker build -t $($Tag):$($Version) -f $DockerFile ."
+	Invoke-Expression "docker tag $($Tag):$($Version) $($ContainerRegistry)$($Tag):$($Version)"
 	Invoke-Expression "docker push $($ContainerRegistry)$($Tag):$($Version)"
 }
