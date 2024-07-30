@@ -93,10 +93,12 @@ function BuildX-And-Push-Docker-Image {
 		[Parameter(ValueFromPipeline)]
 		[string]$ContainerRegistry="",
 		[Parameter(ValueFromPipeline)]
+		[string]$Platform="linux/arm64,linux/amd64",
+		[Parameter(ValueFromPipeline)]
 		[string]$DockerFile="Dockerfile"
     )
 
-	Invoke-Expression "docker buildx build -t $($Tag):$($Version) -f $DockerFile ."
+	Invoke-Expression "docker buildx build -t $($Tag):$($Version) --platform $($Platform) --load -f $DockerFile ."
 	Invoke-Expression "docker tag $($Tag):$($Version) $($ContainerRegistry)$($Tag):$($Version)"
 	Invoke-Expression "docker push $($ContainerRegistry)$($Tag):$($Version)"
 }
