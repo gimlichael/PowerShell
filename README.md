@@ -1,0 +1,1 @@
+%USERPROFILE%\Dokumenter\PowerShell
