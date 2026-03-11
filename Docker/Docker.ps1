@@ -7,18 +7,24 @@
 function Build-Docker-Image {
     [CmdletBinding()]
     param(
-		[Parameter(Mandatory)]
+		[Parameter(Mandatory, Position=0)]
 		[string]$Tag,
-		[Parameter(Mandatory)]
-		[string]$Version,
-		[Parameter(ValueFromPipeline)]
+		[Parameter(Mandatory, Position=1)]
+		[string[]]$Version,
+		[Parameter(Position=2, ValueFromPipeline)]
 		[string]$ContainerRegistry="",
-		[Parameter(ValueFromPipeline)]
-		[string]$DockerFile="Dockerfile"
+		[Parameter(Position=3, ValueFromPipeline)]
+		[string]$DockerFile="Dockerfile",
+		[Parameter(Position=4)]
+		[string[]]$BuildArgs=@()
     )
 
-	Invoke-Expression "docker build -t $($Tag):$($Version) -f $DockerFile ."
-	Invoke-Expression "docker tag $($Tag):$($Version) $($ContainerRegistry)$($Tag):$($Version)"
+	$primaryVersion = $Version[0]
+	$buildArgStr = ($BuildArgs | ForEach-Object { "--build-arg $_" }) -join " "
+	Invoke-Expression "docker build -t $($Tag):$($primaryVersion) $buildArgStr -f $DockerFile .".Trim()
+	foreach ($v in $Version) {
+		Invoke-Expression "docker tag $($Tag):$($primaryVersion) $($ContainerRegistry)$($Tag):$($v)"
+	}
 }
 
 function BuildX-Initialize {
@@ -35,70 +41,90 @@ function BuildX-Initialize {
 function BuildX-Docker-Image {
     [CmdletBinding()]
     param(
-		[Parameter(Mandatory)]
+		[Parameter(Mandatory, Position=0)]
 		[string]$Tag,
-		[Parameter(Mandatory)]
-		[string]$Version,
-		[Parameter(ValueFromPipeline)]
+		[Parameter(Mandatory, Position=1)]
+		[string[]]$Version,
+		[Parameter(Position=2, ValueFromPipeline)]
 		[string]$ContainerRegistry="",
-		[Parameter(ValueFromPipeline)]
+		[Parameter(Position=3, ValueFromPipeline)]
 		[string]$Platform="linux/arm64,linux/amd64",
-		[Parameter(ValueFromPipeline)]
-		[string]$DockerFile="Dockerfile"
+		[Parameter(Position=4, ValueFromPipeline)]
+		[string]$DockerFile="Dockerfile",
+		[Parameter(Position=5)]
+		[string[]]$BuildArgs=@()
     )
 
-	Invoke-Expression "docker buildx build -t $($Tag):$($Version) --platform $($Platform) --load -f $DockerFile ."
-	Invoke-Expression "docker tag $($Tag):$($Version) $($ContainerRegistry)$($Tag):$($Version)"
+	$primaryVersion = $Version[0]
+	$buildArgStr = ($BuildArgs | ForEach-Object { "--build-arg $_" }) -join " "
+	Invoke-Expression "docker buildx build -t $($Tag):$($primaryVersion) --platform $($Platform) --load $buildArgStr -f $DockerFile .".Trim()
+	foreach ($v in $Version) {
+		Invoke-Expression "docker tag $($Tag):$($primaryVersion) $($ContainerRegistry)$($Tag):$($v)"
+	}
 }
 
 function Push-Docker-Image {
     [CmdletBinding()]
     param(
-		[Parameter(Mandatory)]
+		[Parameter(Mandatory, Position=0)]
 		[string]$Tag,
-		[Parameter(Mandatory)]
-		[string]$Version,
-		[Parameter(ValueFromPipeline)]
+		[Parameter(Mandatory, Position=1)]
+		[string[]]$Version,
+		[Parameter(Position=2, ValueFromPipeline)]
 		[string]$ContainerRegistry=""
     )
 
-	Invoke-Expression "docker push $($ContainerRegistry)$($Tag):$($Version)"
+	foreach ($v in $Version) {
+		Invoke-Expression "docker push $($ContainerRegistry)$($Tag):$($v)"
+	}
 }
 
 function Build-And-Push-Docker-Image {
     [CmdletBinding()]
     param(
-		[Parameter(Mandatory)]
+		[Parameter(Mandatory, Position=0)]
 		[string]$Tag,
-		[Parameter(Mandatory)]
-		[string]$Version,
-		[Parameter(ValueFromPipeline)]
+		[Parameter(Mandatory, Position=1)]
+		[string[]]$Version,
+		[Parameter(Position=2, ValueFromPipeline)]
 		[string]$ContainerRegistry="",
-		[Parameter(ValueFromPipeline)]
-		[string]$DockerFile="Dockerfile"
+		[Parameter(Position=3, ValueFromPipeline)]
+		[string]$DockerFile="Dockerfile",
+		[Parameter(Position=4)]
+		[string[]]$BuildArgs=@()
     )
 
-	Invoke-Expression "docker build -t $($Tag):$($Version) -f $DockerFile ."
-	Invoke-Expression "docker tag $($Tag):$($Version) $($ContainerRegistry)$($Tag):$($Version)"
-	Invoke-Expression "docker push $($ContainerRegistry)$($Tag):$($Version)"
+	$primaryVersion = $Version[0]
+	$buildArgStr = ($BuildArgs | ForEach-Object { "--build-arg $_" }) -join " "
+	Invoke-Expression "docker build -t $($Tag):$($primaryVersion) $buildArgStr -f $DockerFile .".Trim()
+	foreach ($v in $Version) {
+		Invoke-Expression "docker tag $($Tag):$($primaryVersion) $($ContainerRegistry)$($Tag):$($v)"
+		Invoke-Expression "docker push $($ContainerRegistry)$($Tag):$($v)"
+	}
 }
 
 function BuildX-And-Push-Docker-Image {
     [CmdletBinding()]
     param(
-		[Parameter(Mandatory)]
+		[Parameter(Mandatory, Position=0)]
 		[string]$Tag,
-		[Parameter(Mandatory)]
-		[string]$Version,
-		[Parameter(ValueFromPipeline)]
+		[Parameter(Mandatory, Position=1)]
+		[string[]]$Version,
+		[Parameter(Position=2, ValueFromPipeline)]
 		[string]$ContainerRegistry="",
-		[Parameter(ValueFromPipeline)]
+		[Parameter(Position=3, ValueFromPipeline)]
 		[string]$Platform="linux/arm64,linux/amd64",
-		[Parameter(ValueFromPipeline)]
-		[string]$DockerFile="Dockerfile"
+		[Parameter(Position=4, ValueFromPipeline)]
+		[string]$DockerFile="Dockerfile",
+		[Parameter(Position=5)]
+		[string[]]$BuildArgs=@()
     )
 
-	Invoke-Expression "docker buildx build -t $($Tag):$($Version) --platform $($Platform) --load -f $DockerFile ."
-	Invoke-Expression "docker tag $($Tag):$($Version) $($ContainerRegistry)$($Tag):$($Version)"
-	Invoke-Expression "docker push $($ContainerRegistry)$($Tag):$($Version)"
+	$primaryVersion = $Version[0]
+	$buildArgStr = ($BuildArgs | ForEach-Object { "--build-arg $_" }) -join " "
+	Invoke-Expression "docker buildx build -t $($Tag):$($primaryVersion) --platform $($Platform) --load $buildArgStr -f $DockerFile .".Trim()
+	foreach ($v in $Version) {
+		Invoke-Expression "docker tag $($Tag):$($primaryVersion) $($ContainerRegistry)$($Tag):$($v)"
+		Invoke-Expression "docker push $($ContainerRegistry)$($Tag):$($v)"
+	}
 }
