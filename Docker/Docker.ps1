@@ -20,7 +20,7 @@ function Build-Docker-Image {
     )
 
 	$primaryVersion = $Version[0]
-	$buildArgStr = ($BuildArgs | ForEach-Object { "--build-arg $_" }) -join " "
+	$buildArgStr = ($BuildArgs | ForEach-Object { "--build-arg `"$_`"" }) -join " "
 	Invoke-Expression "docker build -t $($Tag):$($primaryVersion) $buildArgStr -f $DockerFile .".Trim()
 	foreach ($v in $Version) {
 		Invoke-Expression "docker tag $($Tag):$($primaryVersion) $($ContainerRegistry)$($Tag):$($v)"
@@ -56,7 +56,7 @@ function BuildX-Docker-Image {
     )
 
 	$primaryVersion = $Version[0]
-	$buildArgStr = ($BuildArgs | ForEach-Object { "--build-arg $_" }) -join " "
+	$buildArgStr = ($BuildArgs | ForEach-Object { "--build-arg `"$_`"" }) -join " "
 	Invoke-Expression "docker buildx build -t $($Tag):$($primaryVersion) --platform $($Platform) --load $buildArgStr -f $DockerFile .".Trim()
 	foreach ($v in $Version) {
 		Invoke-Expression "docker tag $($Tag):$($primaryVersion) $($ContainerRegistry)$($Tag):$($v)"
@@ -95,7 +95,7 @@ function Build-And-Push-Docker-Image {
     )
 
 	$primaryVersion = $Version[0]
-	$buildArgStr = ($BuildArgs | ForEach-Object { "--build-arg $_" }) -join " "
+	$buildArgStr = ($BuildArgs | ForEach-Object { "--build-arg `"$_`"" }) -join " "
 	Invoke-Expression "docker build -t $($Tag):$($primaryVersion) $buildArgStr -f $DockerFile .".Trim()
 	foreach ($v in $Version) {
 		Invoke-Expression "docker tag $($Tag):$($primaryVersion) $($ContainerRegistry)$($Tag):$($v)"
@@ -121,7 +121,7 @@ function BuildX-And-Push-Docker-Image {
     )
 
 	$primaryVersion = $Version[0]
-	$buildArgStr = ($BuildArgs | ForEach-Object { "--build-arg $_" }) -join " "
+	$buildArgStr = ($BuildArgs | ForEach-Object { "--build-arg `"$_`"" }) -join " "
 	Invoke-Expression "docker buildx build -t $($Tag):$($primaryVersion) --platform $($Platform) --load $buildArgStr -f $DockerFile .".Trim()
 	foreach ($v in $Version) {
 		Invoke-Expression "docker tag $($Tag):$($primaryVersion) $($ContainerRegistry)$($Tag):$($v)"
